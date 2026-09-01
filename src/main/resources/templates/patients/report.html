@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Medical Report - ' + ${patient.fullName}">Patient Medical Report</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .report-sheet {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 40px;
+        }
+        .report-header {
+            border-bottom: 3px solid #0d6efd;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0d6efd;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 6px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .table-custom th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .table-custom td {
+            font-size: 0.9rem;
+        }
+        .badge {
+            font-weight: 600;
+        }
+        @media print {
+            body {
+                background: #ffffff;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .report-sheet {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Action Bar (Hidden in Print) -->
+<div class="bg-dark py-3 mb-4 no-print text-white shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center" style="max-width: 900px;">
+        <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-outline-light btn-sm d-flex align-items-center gap-1">
+            <i class="bi bi-arrow-left"></i> Back to Patient Record
+        </a>
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-light btn-sm d-flex align-items-center gap-1">
+                <i class="bi bi-printer-fill text-primary"></i> Print Report
+            </button>
+            <a th:href="@{/patients/{id}/report/pdf(id=${patient.id})}" class="btn btn-danger btn-sm d-flex align-items-center gap-1" target="_blank">
+                <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
+            </a>
+            <a th:href="@{/patients/{id}/export/excel(id=${patient.id})}" class="btn btn-success btn-sm d-flex align-items-center gap-1">
+                <i class="bi bi-file-earmark-excel-fill"></i> Export Excel
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Printable Medical Report Document -->
+<div class="container">
+    <div class="report-sheet">
+        <!-- Clinic Branding & Header -->
+        <div class="report-header d-flex justify-content-between align-items-center">
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-hospital-fill fs-2 text-primary"></i>
+                    <h3 class="fw-bold mb-0 text-primary">KLINIKUM CARE MEDICAL CENTER</h3>
+                </div>
+                <div class="small text-muted mt-1">
+                    Department of Internal Medicine & Diagnostics &bull; Tel: +1 (800) 555-CLINIC
+                </div>
+            </div>
+            <div class="text-end">
+                <div class="badge bg-primary fs-6 mb-1" th:text="'Patient ID: #' + ${patient.id}">Patient ID: #1</div>
+                <div class="small text-muted" th:text="'Report Date: ' + ${reportGeneratedAt}">Date: Sept 01, 2026</div>
+            </div>
+        </div>
+
+        <div class="text-center my-3">
+            <h4 class="fw-bold text-uppercase text-dark mb-0">Official Patient Clinical Report</h4>
+            <small class="text-muted">Comprehensive Medical Record & Prescription Summary</small>
+        </div>
+
+        <!-- 1. Patient Demographics -->
+        <div class="section-title"><i class="bi bi-person-badge me-2"></i>1. Patient Demographics & Identification</div>
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-md-4">
+                <div class="small text-muted">Full Name</div>
+                <strong th:text="${patient.fullName}">Eleanor Vance</strong>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="small text-muted">Date of Birth / Age</div>
+                <strong th:text="${#temporals.format(patient.dateOfBirth, 'yyyy-MM-dd')} + ' (' + ${patient.age} + ' yrs)'">1982-05-14 (44 yrs)</strong>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="small text-muted">Gender / Blood Group</div>
+                <strong>
+                    <span th:text="${patient.gender.displayName}">Female</span> /
+                    <span class="text-danger" th:text="${patient.bloodGroup.displayName}">O+</span>
+                </strong>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="small text-muted">Contact Phone</div>
+                <span th:text="${patient.phone}">+1-555-0192</span>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="small text-muted">Email Address</div>
+                <span th:text="${patient.email != null ? patient.email : '-'}">eleanor@example.com</span>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="small text-muted">Residential Address</div>
+                <span th:text="${patient.address != null ? patient.address : '-'}">Springfield, OR</span>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="small text-muted">Emergency Contact</div>
+                <span th:text="${(patient.emergencyContactName != null ? patient.emergencyContactName : '-') + ' ' + (patient.emergencyContactPhone != null ? '(' + patient.emergencyContactPhone + ')' : '')}">Hugh Vance</span>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="small text-muted">Registered Since</div>
+                <span th:text="${patient.createdAt != null ? #temporals.format(patient.createdAt, 'yyyy-MM-dd HH:mm') : '-'}">2026-09-01</span>
+            </div>
+        </div>
+
+        <!-- Medical History & Background -->
+        <div class="p-3 bg-light rounded border mb-4">
+            <div class="fw-bold small text-uppercase text-muted mb-1">Medical Background & Known Allergies</div>
+            <div class="small" th:text="${patient.medicalHistoryNotes != null and !patient.medicalHistoryNotes.isEmpty() ? patient.medicalHistoryNotes : 'No chronic allergies or past surgical history recorded.'}">
+                Penicillin allergy.
+            </div>
+        </div>
+
+        <!-- 2. Diagnosed Illnesses -->
+        <div class="section-title"><i class="bi bi-heart-pulse me-2"></i>2. Clinical Diagnoses & Illness History</div>
+        <table class="table table-bordered table-custom mb-4">
+            <thead>
+            <tr>
+                <th>Illness / Condition</th>
+                <th>ICD-10</th>
+                <th>Status</th>
+                <th>Severity</th>
+                <th>Diagnosed</th>
+                <th>Symptoms & Clinical Notes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="ill : ${patient.illnesses}">
+                <td><strong th:text="${ill.name}">Type 2 Diabetes</strong></td>
+                <td th:text="${ill.icdCode != null ? ill.icdCode : '-'}">E11.9</td>
+                <td><span th:class="${ill.status.badgeClass}" th:text="${ill.status.displayName}">Active</span></td>
+                <td><span th:class="${ill.severity.badgeClass}" th:text="${ill.severity.displayName}">Moderate</span></td>
+                <td th:text="${#temporals.format(ill.diagnosedDate, 'yyyy-MM-dd')}">2021-03-10</td>
+                <td>
+                    <div th:text="${ill.symptoms}" class="small">Symptoms</div>
+                    <div th:if="${ill.notes}" th:text="${ill.notes}" class="small text-muted fst-italic">Notes</div>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(patient.illnesses)}">
+                <td colspan="6" class="text-center text-muted py-3">No diagnosed illnesses on record.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 3. Prescribed Medications -->
+        <div class="section-title"><i class="bi bi-capsule-pill me-2"></i>3. Medications & Treatment Plan</div>
+        <table class="table table-bordered table-custom mb-4">
+            <thead>
+            <tr>
+                <th>Medication</th>
+                <th>Dosage</th>
+                <th>Frequency</th>
+                <th>Route</th>
+                <th>Status</th>
+                <th>Duration</th>
+                <th>Instructions & Prescribing Physician</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="med : ${patient.medications}">
+                <td><strong th:text="${med.name}">Metformin</strong></td>
+                <td th:text="${med.dosage}">500 mg</td>
+                <td th:text="${med.frequency}">Twice daily</td>
+                <td th:text="${med.route != null ? med.route : 'Oral'}">Oral</td>
+                <td><span th:class="${med.status.badgeClass}" th:text="${med.status.displayName}">Active</span></td>
+                <td class="small">
+                    <span th:text="${#temporals.format(med.startDate, 'yyyy-MM-dd')}">2021-03-15</span> to
+                    <span th:text="${med.endDate != null ? #temporals.format(med.endDate, 'yyyy-MM-dd') : 'Ongoing'}">Ongoing</span>
+                </td>
+                <td class="small">
+                    <div th:text="${med.instructions}">Instructions</div>
+                    <div th:if="${med.prescribedBy}" class="text-secondary fw-medium" th:text="'Dr. ' + ${med.prescribedBy}">Dr. Jenkins</div>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(patient.medications)}">
+                <td colspan="7" class="text-center text-muted py-3">No medication records on file.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Physician Remarks & Signature Section -->
+        <div class="row pt-4 mt-4 border-top">
+            <div class="col-7">
+                <h6 class="fw-bold small text-uppercase text-muted">Physician Assessment & Remarks</h6>
+                <p class="small text-muted mb-0">
+                    The patient's current treatment regimen is being monitored according to clinical standards. Follow-up diagnostic lab tests recommended upon completion of cycle.
+                </p>
+            </div>
+            <div class="col-5 text-end">
+                <div class="mt-4 pt-4 border-top d-inline-block text-center" style="width: 220px;">
+                    <div class="fw-bold small">Attending Physician</div>
+                    <div class="text-muted small">Signature & Official Stamp</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center text-muted small mt-5 pt-3 border-top">
+            This medical report is an official electronic record from Klinikum Care Management System. Generated on <span th:text="${reportGeneratedAt}">Sept 01, 2026</span>.
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

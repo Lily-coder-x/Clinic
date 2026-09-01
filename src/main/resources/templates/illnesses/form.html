@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${illness.id != null ? 'Edit Diagnosis' : 'Add Diagnosis'})}"></head>
+<body>
+
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="container pb-5">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold text-dark mb-1" th:text="${illness.id != null ? 'Edit Diagnosis' : 'Record New Diagnosis'}">Diagnosis</h2>
+                    <p class="text-muted mb-0">For patient: <strong th:text="${patient.fullName}">Patient Name</strong> (ID: #<span th:text="${patient.id}"></span>)</p>
+                </div>
+                <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Patient Record
+                </a>
+            </div>
+
+            <div class="card p-4 p-md-5">
+                <form th:action="${illness.id != null} ? @{/patients/{patientId}/illnesses/{id}/edit(patientId=${patient.id}, id=${illness.id})} : @{/patients/{patientId}/illnesses(patientId=${patient.id})}"
+                      th:object="${illness}" method="post">
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-bold">Illness / Condition Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{name}"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                   placeholder="e.g. Type 2 Diabetes Mellitus, Essential Hypertension">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">ICD-10 Code</label>
+                            <input type="text" class="form-control" th:field="*{icdCode}" placeholder="e.g. E11.9, I10">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Diagnosis Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" th:field="*{diagnosedDate}"
+                                   th:classappend="${#fields.hasErrors('diagnosedDate')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('diagnosedDate')}" th:errors="*{diagnosedDate}"></div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Status</label>
+                            <select class="form-select" th:field="*{status}">
+                                <option th:each="st : ${statuses}" th:value="${st}" th:text="${st.displayName}"></option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Severity</label>
+                            <select class="form-select" th:field="*{severity}">
+                                <option th:each="sev : ${severities}" th:value="${sev}" th:text="${sev.displayName}"></option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Observed Symptoms</label>
+                            <input type="text" class="form-control" th:field="*{symptoms}" placeholder="e.g. Shortness of breath, localized swelling">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Clinical Description</label>
+                            <input type="text" class="form-control" th:field="*{description}" placeholder="e.g. Primary systemic arterial hypertension">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Physician Notes & Recommendations</label>
+                            <textarea class="form-control" th:field="*{notes}" rows="3" placeholder="Lab results, dietary advice, follow-up schedule..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-4 mt-4 border-top">
+                        <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-5 fw-bold">
+                            <i class="bi bi-check2-circle me-1"></i> Save Diagnosis
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

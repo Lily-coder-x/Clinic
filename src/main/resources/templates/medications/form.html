@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${medication.id != null ? 'Edit Prescription' : 'Prescribe Medication'})}"></head>
+<body>
+
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="container pb-5">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold text-dark mb-1" th:text="${medication.id != null ? 'Edit Prescription' : 'Prescribe Medication'}">Prescription</h2>
+                    <p class="text-muted mb-0">For patient: <strong th:text="${patient.fullName}">Patient Name</strong> (ID: #<span th:text="${patient.id}"></span>)</p>
+                </div>
+                <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Patient Record
+                </a>
+            </div>
+
+            <div class="card p-4 p-md-5">
+                <form th:action="${medication.id != null} ? @{/patients/{patientId}/medications/{id}/edit(patientId=${patient.id}, id=${medication.id})} : @{/patients/{patientId}/medications(patientId=${patient.id})}"
+                      th:object="${medication}" method="post">
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Medication Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{name}"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                   placeholder="e.g. Metformin Hydrochloride, Lisinopril">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Dosage <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{dosage}"
+                                   th:classappend="${#fields.hasErrors('dosage')} ? 'is-invalid' : ''"
+                                   placeholder="e.g. 500 mg, 10 mg">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('dosage')}" th:errors="*{dosage}"></div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Route</label>
+                            <input type="text" class="form-control" th:field="*{route}" placeholder="e.g. Oral, Inhalation, Topical">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Frequency <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{frequency}"
+                                   th:classappend="${#fields.hasErrors('frequency')} ? 'is-invalid' : ''"
+                                   placeholder="e.g. Twice daily with meals">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('frequency')}" th:errors="*{frequency}"></div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Start Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" th:field="*{startDate}"
+                                   th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">End Date (Optional)</label>
+                            <input type="date" class="form-control" th:field="*{endDate}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Status</label>
+                            <select class="form-select" th:field="*{status}">
+                                <option th:each="st : ${statuses}" th:value="${st}" th:text="${st.displayName}"></option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Prescribing Physician</label>
+                            <input type="text" class="form-control" th:field="*{prescribedBy}" placeholder="e.g. Dr. Sarah Jenkins">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Patient Instructions</label>
+                            <textarea class="form-control" th:field="*{instructions}" rows="2" placeholder="e.g. Take with breakfast and dinner. Stay well hydrated."></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Clinical Notes / Rationale</label>
+                            <textarea class="form-control" th:field="*{notes}" rows="2" placeholder="Reason for prescription or monitoring instructions..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-4 mt-4 border-top">
+                        <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        <button type="submit" class="btn btn-success px-5 fw-bold">
+                            <i class="bi bi-check2-circle me-1"></i> Save Medication
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>
