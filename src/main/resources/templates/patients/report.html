@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="'Medical Report - ' + ${patient.fullName}">Patient Medical Report</title>
+    <title th:text="#{report.title} + ' - ' + ${patient.fullName}">Patient Medical Report</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -76,17 +76,33 @@
 <div class="bg-dark py-3 mb-4 no-print text-white shadow-sm">
     <div class="container d-flex justify-content-between align-items-center" style="max-width: 900px;">
         <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-outline-light btn-sm d-flex align-items-center gap-1">
-            <i class="bi bi-arrow-left"></i> Back to Patient Record
+            <i class="bi bi-arrow-left"></i> <span th:text="#{report.back}">Back to Patient Record</span>
         </a>
-        <div class="d-flex gap-2">
+        <div class="d-flex align-items-center gap-2">
+            <!-- Language Switcher in Report Header -->
+            <div class="btn-group btn-group-sm me-2" role="group" aria-label="Language Selector">
+                <a href="?lang=en"
+                   class="btn btn-sm d-flex align-items-center gap-1"
+                   th:classappend="${#locale != null and #locale.language == 'de'} ? 'btn-outline-light' : 'btn-light text-primary fw-bold shadow-sm'"
+                   title="English">
+                    <span>🇬🇧 EN</span>
+                </a>
+                <a href="?lang=de"
+                   class="btn btn-sm d-flex align-items-center gap-1"
+                   th:classappend="${#locale != null and #locale.language == 'de'} ? 'btn-light text-primary fw-bold shadow-sm' : 'btn-outline-light'"
+                   title="Deutsch">
+                    <span>🇩🇪 DE</span>
+                </a>
+            </div>
+
             <button onclick="window.print()" class="btn btn-light btn-sm d-flex align-items-center gap-1">
-                <i class="bi bi-printer-fill text-primary"></i> Print Report
+                <i class="bi bi-printer-fill text-primary"></i> <span th:text="#{report.print}">Print Report</span>
             </button>
             <a th:href="@{/patients/{id}/report/pdf(id=${patient.id})}" class="btn btn-danger btn-sm d-flex align-items-center gap-1" target="_blank">
-                <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
+                <i class="bi bi-file-earmark-pdf-fill"></i> <span th:text="#{report.downloadPdf}">Download PDF</span>
             </a>
             <a th:href="@{/patients/{id}/export/excel(id=${patient.id})}" class="btn btn-success btn-sm d-flex align-items-center gap-1">
-                <i class="bi bi-file-earmark-excel-fill"></i> Export Excel
+                <i class="bi bi-file-earmark-excel-fill"></i> <span th:text="#{report.exportExcel}">Export Excel</span>
             </a>
         </div>
     </div>
@@ -100,90 +116,90 @@
             <div>
                 <div class="d-flex align-items-center gap-2">
                     <i class="bi bi-hospital-fill fs-2 text-primary"></i>
-                    <h3 class="fw-bold mb-0 text-primary">KLINIKUM CARE MEDICAL CENTER</h3>
+                    <h3 class="fw-bold mb-0 text-primary" th:text="#{report.clinicName}">KLINIKUM CARE MEDICAL CENTER</h3>
                 </div>
-                <div class="small text-muted mt-1">
+                <div class="small text-muted mt-1" th:text="#{report.clinicDept}">
                     Department of Internal Medicine & Diagnostics &bull; Tel: +1 (800) 555-CLINIC
                 </div>
             </div>
             <div class="text-end">
-                <div class="badge bg-primary fs-6 mb-1" th:text="'Patient ID: #' + ${patient.id}">Patient ID: #1</div>
-                <div class="small text-muted" th:text="'Report Date: ' + ${reportGeneratedAt}">Date: Sept 01, 2026</div>
+                <div class="badge bg-primary fs-6 mb-1" th:text="#{report.patientId(${patient.id})}">Patient ID: #1</div>
+                <div class="small text-muted" th:text="#{report.date(${reportGeneratedAt})}">Date: Sept 01, 2026</div>
             </div>
         </div>
 
         <div class="text-center my-3">
-            <h4 class="fw-bold text-uppercase text-dark mb-0">Official Patient Clinical Report</h4>
-            <small class="text-muted">Comprehensive Medical Record & Prescription Summary</small>
+            <h4 class="fw-bold text-uppercase text-dark mb-0" th:text="#{report.title}">Official Patient Clinical Report</h4>
+            <small class="text-muted" th:text="#{dashboard.subtitle}">Comprehensive Medical Record & Prescription Summary</small>
         </div>
 
         <!-- 1. Patient Demographics -->
-        <div class="section-title"><i class="bi bi-person-badge me-2"></i>1. Patient Demographics & Identification</div>
+        <div class="section-title"><i class="bi bi-person-badge me-2"></i>1. <span th:text="#{report.patientDemographics}">Patient Demographics & Identification</span></div>
         <div class="row g-3 mb-3">
             <div class="col-6 col-md-4">
-                <div class="small text-muted">Full Name</div>
+                <div class="small text-muted" th:text="#{patient.chart.fullName}">Full Name</div>
                 <strong th:text="${patient.fullName}">Eleanor Vance</strong>
             </div>
             <div class="col-6 col-md-4">
-                <div class="small text-muted">Date of Birth / Age</div>
-                <strong th:text="${#temporals.format(patient.dateOfBirth, 'yyyy-MM-dd')} + ' (' + ${patient.age} + ' yrs)'">1982-05-14 (44 yrs)</strong>
+                <div class="small text-muted" th:text="#{dashboard.table.ageGender}">Date of Birth / Age</div>
+                <strong><span th:text="${#temporals.format(patient.dateOfBirth, 'yyyy-MM-dd')}">1982-05-14</span> (<span th:text="#{common.yearsOld(${patient.age})}">44 yrs</span>)</strong>
             </div>
             <div class="col-6 col-md-4">
-                <div class="small text-muted">Gender / Blood Group</div>
+                <div class="small text-muted" th:text="#{patient.chart.bloodGroup}">Gender / Blood Group</div>
                 <strong>
-                    <span th:text="${patient.gender.displayName}">Female</span> /
-                    <span class="text-danger" th:text="${patient.bloodGroup.displayName}">O+</span>
+                    <span th:text="#{${'gender.' + patient.gender}}">Female</span> /
+                    <span class="text-danger" th:text="#{${'bloodgroup.' + patient.bloodGroup}}">O+</span>
                 </strong>
             </div>
             <div class="col-6 col-md-4">
-                <div class="small text-muted">Contact Phone</div>
+                <div class="small text-muted" th:text="#{patient.form.phone}">Contact Phone</div>
                 <span th:text="${patient.phone}">+1-555-0192</span>
             </div>
             <div class="col-6 col-md-4">
-                <div class="small text-muted">Email Address</div>
+                <div class="small text-muted" th:text="#{patient.form.email}">Email Address</div>
                 <span th:text="${patient.email != null ? patient.email : '-'}">eleanor@example.com</span>
             </div>
             <div class="col-6 col-md-4">
-                <div class="small text-muted">Residential Address</div>
+                <div class="small text-muted" th:text="#{patient.form.address}">Residential Address</div>
                 <span th:text="${patient.address != null ? patient.address : '-'}">Springfield, OR</span>
             </div>
             <div class="col-12 col-md-6">
-                <div class="small text-muted">Emergency Contact</div>
+                <div class="small text-muted" th:text="#{patient.chart.emergencyContact}">Emergency Contact</div>
                 <span th:text="${(patient.emergencyContactName != null ? patient.emergencyContactName : '-') + ' ' + (patient.emergencyContactPhone != null ? '(' + patient.emergencyContactPhone + ')' : '')}">Hugh Vance</span>
             </div>
             <div class="col-12 col-md-6">
-                <div class="small text-muted">Registered Since</div>
+                <div class="small text-muted" th:text="#{patient.chart.th.period}">Registered Since</div>
                 <span th:text="${patient.createdAt != null ? #temporals.format(patient.createdAt, 'yyyy-MM-dd HH:mm') : '-'}">2026-09-01</span>
             </div>
         </div>
 
         <!-- Medical History & Background -->
         <div class="p-3 bg-light rounded border mb-4">
-            <div class="fw-bold small text-uppercase text-muted mb-1">Medical Background & Known Allergies</div>
-            <div class="small" th:text="${patient.medicalHistoryNotes != null and !patient.medicalHistoryNotes.isEmpty() ? patient.medicalHistoryNotes : 'No chronic allergies or past surgical history recorded.'}">
+            <div class="fw-bold small text-uppercase text-muted mb-1" th:text="#{patient.chart.medicalHistory}">Medical Background & Known Allergies</div>
+            <div class="small" th:text="${patient.medicalHistoryNotes != null and !patient.medicalHistoryNotes.isEmpty()} ? ${patient.medicalHistoryNotes} : #{common.noneRecorded}">
                 Penicillin allergy.
             </div>
         </div>
 
         <!-- 2. Diagnosed Illnesses -->
-        <div class="section-title"><i class="bi bi-heart-pulse me-2"></i>2. Clinical Diagnoses & Illness History</div>
+        <div class="section-title"><i class="bi bi-heart-pulse me-2"></i>2. <span th:text="#{report.diagnoses}">Clinical Diagnoses & Illness History</span></div>
         <table class="table table-bordered table-custom mb-4">
             <thead>
             <tr>
-                <th>Illness / Condition</th>
-                <th>ICD-10</th>
-                <th>Status</th>
-                <th>Severity</th>
-                <th>Diagnosed</th>
-                <th>Symptoms & Clinical Notes</th>
+                <th th:text="#{report.th.condition}">Illness / Condition</th>
+                <th th:text="#{report.th.icd}">ICD-10</th>
+                <th th:text="#{report.th.status}">Status</th>
+                <th th:text="#{report.th.severity}">Severity</th>
+                <th th:text="#{report.th.date}">Diagnosed</th>
+                <th th:text="#{report.th.symptoms}">Symptoms & Clinical Notes</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="ill : ${patient.illnesses}">
                 <td><strong th:text="${ill.name}">Type 2 Diabetes</strong></td>
                 <td th:text="${ill.icdCode != null ? ill.icdCode : '-'}">E11.9</td>
-                <td><span th:class="${ill.status.badgeClass}" th:text="${ill.status.displayName}">Active</span></td>
-                <td><span th:class="${ill.severity.badgeClass}" th:text="${ill.severity.displayName}">Moderate</span></td>
+                <td><span th:class="${ill.status.badgeClass}" th:text="#{${'illness.status.' + ill.status}}">Active</span></td>
+                <td><span th:class="${ill.severity.badgeClass}" th:text="#{${'illness.severity.' + ill.severity}}">Moderate</span></td>
                 <td th:text="${#temporals.format(ill.diagnosedDate, 'yyyy-MM-dd')}">2021-03-10</td>
                 <td>
                     <div th:text="${ill.symptoms}" class="small">Symptoms</div>
@@ -191,23 +207,23 @@
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(patient.illnesses)}">
-                <td colspan="6" class="text-center text-muted py-3">No diagnosed illnesses on record.</td>
+                <td colspan="6" class="text-center text-muted py-3" th:text="#{report.noDiagnoses}">No diagnosed illnesses on record.</td>
             </tr>
             </tbody>
         </table>
 
         <!-- 3. Prescribed Medications -->
-        <div class="section-title"><i class="bi bi-capsule-pill me-2"></i>3. Medications & Treatment Plan</div>
+        <div class="section-title"><i class="bi bi-capsule-pill me-2"></i>3. <span th:text="#{report.medications}">Medications & Treatment Plan</span></div>
         <table class="table table-bordered table-custom mb-4">
             <thead>
             <tr>
-                <th>Medication</th>
-                <th>Dosage</th>
-                <th>Frequency</th>
-                <th>Route</th>
-                <th>Status</th>
-                <th>Duration</th>
-                <th>Instructions & Prescribing Physician</th>
+                <th th:text="#{report.th.medication}">Medication</th>
+                <th th:text="#{report.th.dosage}">Dosage</th>
+                <th th:text="#{report.th.frequency}">Frequency</th>
+                <th th:text="#{report.th.route}">Route</th>
+                <th th:text="#{report.th.status}">Status</th>
+                <th th:text="#{patient.chart.th.period}">Duration</th>
+                <th th:text="#{patient.chart.th.prescribedBy}">Instructions & Prescribing Physician</th>
             </tr>
             </thead>
             <tbody>
@@ -216,18 +232,18 @@
                 <td th:text="${med.dosage}">500 mg</td>
                 <td th:text="${med.frequency}">Twice daily</td>
                 <td th:text="${med.route != null ? med.route : 'Oral'}">Oral</td>
-                <td><span th:class="${med.status.badgeClass}" th:text="${med.status.displayName}">Active</span></td>
+                <td><span th:class="${med.status.badgeClass}" th:text="#{${'medication.status.' + med.status}}">Active</span></td>
                 <td class="small">
-                    <span th:text="${#temporals.format(med.startDate, 'yyyy-MM-dd')}">2021-03-15</span> to
-                    <span th:text="${med.endDate != null ? #temporals.format(med.endDate, 'yyyy-MM-dd') : 'Ongoing'}">Ongoing</span>
+                    <span th:text="${#temporals.format(med.startDate, 'yyyy-MM-dd')}">2021-03-15</span> <span th:text="#{common.to}">to</span>
+                    <span th:text="${med.endDate != null} ? ${#temporals.format(med.endDate, 'yyyy-MM-dd')} : #{common.ongoing}">Ongoing</span>
                 </td>
                 <td class="small">
                     <div th:text="${med.instructions}">Instructions</div>
-                    <div th:if="${med.prescribedBy}" class="text-secondary fw-medium" th:text="'Dr. ' + ${med.prescribedBy}">Dr. Jenkins</div>
+                    <div th:if="${med.prescribedBy}" class="text-secondary fw-medium" th:text="${med.prescribedBy}">Dr. Jenkins</div>
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(patient.medications)}">
-                <td colspan="7" class="text-center text-muted py-3">No medication records on file.</td>
+                <td colspan="7" class="text-center text-muted py-3" th:text="#{report.noMedications}">No medication records on file.</td>
             </tr>
             </tbody>
         </table>
@@ -235,21 +251,21 @@
         <!-- Physician Remarks & Signature Section -->
         <div class="row pt-4 mt-4 border-top">
             <div class="col-7">
-                <h6 class="fw-bold small text-uppercase text-muted">Physician Assessment & Remarks</h6>
-                <p class="small text-muted mb-0">
+                <h6 class="fw-bold small text-uppercase text-muted" th:text="#{report.summarySection}">Physician Assessment & Remarks</h6>
+                <p class="small text-muted mb-0" th:text="#{report.summaryText}">
                     The patient's current treatment regimen is being monitored according to clinical standards. Follow-up diagnostic lab tests recommended upon completion of cycle.
                 </p>
             </div>
             <div class="col-5 text-end">
                 <div class="mt-4 pt-4 border-top d-inline-block text-center" style="width: 220px;">
-                    <div class="fw-bold small">Attending Physician</div>
-                    <div class="text-muted small">Signature & Official Stamp</div>
+                    <div class="fw-bold small" th:text="#{report.physicianSignature}">Attending Physician</div>
+                    <div class="text-muted small" th:text="#{report.officialStamp}">Signature & Official Stamp</div>
                 </div>
             </div>
         </div>
 
         <div class="text-center text-muted small mt-5 pt-3 border-top">
-            This medical report is an official electronic record from Klinikum Care Management System. Generated on <span th:text="${reportGeneratedAt}">Sept 01, 2026</span>.
+            &copy; 2026 KLINIKUM Care &bull; <span th:text="#{report.date(${reportGeneratedAt})}">Sept 01, 2026</span>
         </div>
     </div>
 </div>

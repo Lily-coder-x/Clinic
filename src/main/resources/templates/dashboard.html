@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Clinic Dashboard')}"></head>
+<head th:replace="~{fragments/layout :: head(#{dashboard.title})}"></head>
 <body>
 
 <div th:replace="~{fragments/layout :: navbar}"></div>
@@ -11,15 +11,15 @@
     <!-- Top Banner -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
         <div>
-            <h2 class="fw-bold text-dark mb-1">Clinic Management Dashboard</h2>
-            <p class="text-muted mb-0">Overview of clinical cases, active illnesses, medications, and patient records.</p>
+            <h2 class="fw-bold text-dark mb-1" th:text="#{dashboard.title}">Clinic Management Dashboard</h2>
+            <p class="text-muted mb-0" th:text="#{dashboard.subtitle}">Overview of clinical cases, active illnesses, medications, and patient records.</p>
         </div>
         <div class="d-flex gap-2">
             <a th:href="@{/patients/new}" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
-                <i class="bi bi-person-plus-fill"></i> New Patient
+                <i class="bi bi-person-plus-fill"></i> <span th:text="#{dashboard.newPatient}">New Patient</span>
             </a>
             <a th:href="@{/patients/export/excel}" class="btn btn-success d-flex align-items-center gap-1 shadow-sm">
-                <i class="bi bi-file-earmark-excel-fill"></i> Excel Export
+                <i class="bi bi-file-earmark-excel-fill"></i> <span th:text="#{dashboard.excelExport}">Excel Export</span>
             </a>
         </div>
     </div>
@@ -30,9 +30,9 @@
             <div class="card stat-card bg-primary text-white p-3 h-100 shadow-sm">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <div class="text-uppercase small fw-bold opacity-75">Total Patients</div>
+                        <div class="text-uppercase small fw-bold opacity-75" th:text="#{dashboard.totalPatients}">Total Patients</div>
                         <h2 class="display-6 fw-bold mb-0" th:text="${stats.totalPatients}">0</h2>
-                        <small class="opacity-75">Registered in system</small>
+                        <small class="opacity-75" th:text="#{dashboard.totalPatients.sub}">Registered in system</small>
                     </div>
                     <i class="bi bi-people-fill stat-icon"></i>
                 </div>
@@ -43,9 +43,9 @@
             <div class="card stat-card bg-danger text-white p-3 h-100 shadow-sm">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <div class="text-uppercase small fw-bold opacity-75">Active Illnesses</div>
+                        <div class="text-uppercase small fw-bold opacity-75" th:text="#{dashboard.activeIllnesses}">Active Illnesses</div>
                         <h2 class="display-6 fw-bold mb-0" th:text="${stats.activeIllnesses}">0</h2>
-                        <small class="opacity-75" th:text="${stats.chronicIllnesses} + ' chronic cases'"></small>
+                        <small class="opacity-75" th:text="#{dashboard.activeIllnesses.chronic(${stats.chronicIllnesses})}">0 chronic cases</small>
                     </div>
                     <i class="bi bi-heart-pulse-fill stat-icon"></i>
                 </div>
@@ -56,9 +56,9 @@
             <div class="card stat-card bg-success text-white p-3 h-100 shadow-sm">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <div class="text-uppercase small fw-bold opacity-75">Active Medications</div>
+                        <div class="text-uppercase small fw-bold opacity-75" th:text="#{dashboard.activeMedications}">Active Medications</div>
                         <h2 class="display-6 fw-bold mb-0" th:text="${stats.activeMedications}">0</h2>
-                        <small class="opacity-75" th:text="'Total: ' + ${stats.totalMedications} + ' prescribed'"></small>
+                        <small class="opacity-75" th:text="#{dashboard.activeMedications.total(${stats.totalMedications})}">Total: 0 prescribed</small>
                     </div>
                     <i class="bi bi-capsule-pill stat-icon"></i>
                 </div>
@@ -69,9 +69,9 @@
             <div class="card stat-card bg-info text-white p-3 h-100 shadow-sm">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <div class="text-uppercase small fw-bold opacity-75">Cured Cases</div>
+                        <div class="text-uppercase small fw-bold opacity-75" th:text="#{dashboard.curedCases}">Cured Cases</div>
                         <h2 class="display-6 fw-bold mb-0" th:text="${stats.curedIllnesses}">0</h2>
-                        <small class="opacity-75">Successfully resolved</small>
+                        <small class="opacity-75" th:text="#{dashboard.curedCases.sub}">Successfully resolved</small>
                     </div>
                     <i class="bi bi-check2-circle stat-icon"></i>
                 </div>
@@ -86,20 +86,20 @@
             <div class="card p-4 h-100">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="section-header mb-0">
-                        <i class="bi bi-clock-history text-primary"></i> Recently Registered Patients
+                        <i class="bi bi-clock-history text-primary"></i> <span th:text="#{dashboard.recentPatients}">Recently Registered Patients</span>
                     </h5>
-                    <a th:href="@{/patients}" class="btn btn-outline-primary btn-sm">View All Patients</a>
+                    <a th:href="@{/patients}" class="btn btn-outline-primary btn-sm" th:text="#{dashboard.viewAllPatients}">View All Patients</a>
                 </div>
 
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                         <tr>
-                            <th>Patient</th>
-                            <th>Age / Gender</th>
-                            <th>Blood</th>
-                            <th>Active Cases</th>
-                            <th>Actions</th>
+                            <th th:text="#{dashboard.table.patient}">Patient</th>
+                            <th th:text="#{dashboard.table.ageGender}">Age / Gender</th>
+                            <th th:text="#{dashboard.table.blood}">Blood</th>
+                            <th th:text="#{dashboard.table.activeCases}">Active Cases</th>
+                            <th th:text="#{dashboard.table.actions}">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -118,36 +118,36 @@
                                 </div>
                             </td>
                             <td>
-                                <span th:text="${patient.age} + ' yrs'">30 yrs</span>
-                                <div class="small text-muted" th:text="${patient.gender.displayName}">Male</div>
+                                <span th:text="#{common.yearsOld(${patient.age})}">30 yrs</span>
+                                <div class="small text-muted" th:text="#{${'gender.' + patient.gender}}">Male</div>
                             </td>
                             <td>
-                                <span class="badge bg-light text-dark border" th:text="${patient.bloodGroup.displayName}">O+</span>
+                                <span class="badge bg-light text-dark border" th:text="#{${'bloodgroup.' + patient.bloodGroup}}">O+</span>
                             </td>
                             <td>
-                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle" th:text="${patient.activeIllnessCount} + ' Illnesses'">
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle" th:text="#{dashboard.illnessCount(${patient.activeIllnessCount})}">
                                     1 Illnesses
                                 </span>
-                                <span class="badge bg-success-subtle text-success border border-success-subtle ms-1" th:text="${patient.activeMedicationCount} + ' Meds'">
+                                <span class="badge bg-success-subtle text-success border border-success-subtle ms-1" th:text="#{dashboard.medCount(${patient.activeMedicationCount})}">
                                     2 Meds
                                 </span>
                             </td>
                             <td>
                                 <div class="btn-group btn-group-sm">
-                                    <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-light" title="View Chart">
+                                    <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-light" th:title="#{patients.list.action.viewChart}">
                                         <i class="bi bi-eye text-primary"></i>
                                     </a>
-                                    <a th:href="@{/patients/{id}/report(id=${patient.id})}" class="btn btn-light" title="Medical Report">
+                                    <a th:href="@{/patients/{id}/report(id=${patient.id})}" class="btn btn-light" th:title="#{patients.list.action.viewReport}">
                                         <i class="bi bi-file-earmark-medical text-info"></i>
                                     </a>
-                                    <a th:href="@{/patients/{id}/report/pdf(id=${patient.id})}" class="btn btn-light" title="Download PDF Report" target="_blank">
+                                    <a th:href="@{/patients/{id}/report/pdf(id=${patient.id})}" class="btn btn-light" th:title="#{patients.list.action.downloadPdf}" target="_blank">
                                         <i class="bi bi-file-earmark-pdf text-danger"></i>
                                     </a>
                                 </div>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(stats.recentPatients)}">
-                            <td colspan="5" class="text-center py-4 text-muted">No patients registered yet.</td>
+                            <td colspan="5" class="text-center py-4 text-muted" th:text="#{dashboard.table.noPatients}">No patients registered yet.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -159,9 +159,9 @@
         <div class="col-lg-4">
             <div class="card p-4 h-100">
                 <h5 class="section-header mb-3">
-                    <i class="bi bi-pie-chart-fill text-primary"></i> Common Diagnoses
+                    <i class="bi bi-pie-chart-fill text-primary"></i> <span th:text="#{dashboard.commonDiagnoses}">Common Diagnoses</span>
                 </h5>
-                <p class="small text-muted mb-3">Frequently recorded illnesses across all clinic patients.</p>
+                <p class="small text-muted mb-3" th:text="#{dashboard.commonDiagnoses.sub}">Frequently recorded illnesses across all clinic patients.</p>
 
                 <div class="list-group list-group-flush">
                     <div th:each="entry : ${stats.illnessDistribution}" class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
@@ -169,21 +169,21 @@
                             <i class="bi bi-activity text-danger"></i>
                             <span class="fw-medium" th:text="${entry.key}">Hypertension</span>
                         </div>
-                        <span class="badge bg-primary rounded-pill" th:text="${entry.value} + ' patients'">2</span>
+                        <span class="badge bg-primary rounded-pill" th:text="#{dashboard.commonDiagnoses.patients(${entry.value})}">2 patients</span>
                     </div>
-                    <div th:if="${#maps.isEmpty(stats.illnessDistribution)}" class="text-muted text-center py-3">
+                    <div th:if="${#maps.isEmpty(stats.illnessDistribution)}" class="text-muted text-center py-3" th:text="#{dashboard.commonDiagnoses.noRecords}">
                         No illness records found.
                     </div>
                 </div>
 
                 <div class="mt-4 pt-3 border-top">
-                    <h6 class="fw-bold mb-2 small text-uppercase text-muted">Quick Features</h6>
+                    <h6 class="fw-bold mb-2 small text-uppercase text-muted" th:text="#{dashboard.quickFeatures}">Quick Features</h6>
                     <div class="d-grid gap-2">
                         <a th:href="@{/patients/new}" class="btn btn-outline-primary btn-sm text-start d-flex align-items-center gap-2">
-                            <i class="bi bi-person-plus"></i> Add New Patient Profile
+                            <i class="bi bi-person-plus"></i> <span th:text="#{dashboard.quickAddPatient}">Add New Patient Profile</span>
                         </a>
                         <a th:href="@{/patients/export/excel}" class="btn btn-outline-success btn-sm text-start d-flex align-items-center gap-2">
-                            <i class="bi bi-file-earmark-excel"></i> Download Full Database (Excel)
+                            <i class="bi bi-file-earmark-excel"></i> <span th:text="#{dashboard.quickDownloadExcel}">Download Full Database (Excel)</span>
                         </a>
                     </div>
                 </div>

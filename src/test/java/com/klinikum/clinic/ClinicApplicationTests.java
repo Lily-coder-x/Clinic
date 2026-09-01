@@ -254,4 +254,50 @@ class ClinicApplicationTests {
                 .andExpect(jsonPath("$.totalPatients", greaterThanOrEqualTo(4)))
                 .andExpect(jsonPath("$.activeIllnesses", greaterThanOrEqualTo(1)));
     }
+
+    @Test
+    @DisplayName("i18n: Language switch to German changes texts on dashboard and patient pages")
+    void testGermanLanguageSwitch() throws Exception {
+        // Dashboard in German
+        mockMvc.perform(get("/").param("lang", "de"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Klinik-Verwaltungs-Dashboard")))
+                .andExpect(content().string(containsString("Patient registrieren")))
+                .andExpect(content().string(containsString("Patienten Gesamt")));
+
+        // Patients List in German
+        mockMvc.perform(get("/patients").param("lang", "de"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Patientenverzeichnis")))
+                .andExpect(content().string(containsString("Alle exportieren (Excel)")));
+
+        List<Patient> patients = patientService.getAllPatients();
+        Patient patient = patients.get(0);
+
+        // Patient Chart in German
+        mockMvc.perform(get("/patients/{id}", patient.getId()).param("lang", "de"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Krankenakte")))
+                .andExpect(content().string(containsString("Diagnose hinzuf\u00FCgen")));
+
+        // Medical Report in German
+        mockMvc.perform(get("/patients/{id}/report", patient.getId()).param("lang", "de"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Medizinischer Patientenbericht")))
+                .andExpect(content().string(containsString("KLINIKUM CARE MEDIZINISCHES ZENTRUM")));
+    }
+
+    @Test
+    @DisplayName("i18n: Language switch to English displays English texts")
+    void testEnglishLanguageSwitch() throws Exception {
+        mockMvc.perform(get("/").param("lang", "en"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Clinic Management Dashboard")))
+                .andExpect(content().string(containsString("Register Patient")))
+                .andExpect(content().string(containsString("Total Patients")));
+
+        mockMvc.perform(get("/patients").param("lang", "en"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Patient Directory")));
+    }
 }

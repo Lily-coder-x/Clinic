@@ -107,21 +107,37 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/}"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+                    <a class="nav-link" th:href="@{/}"><i class="bi bi-speedometer2 me-1"></i> <span th:text="#{nav.dashboard}">Dashboard</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/patients}"><i class="bi bi-people-fill me-1"></i> Patients</a>
+                    <a class="nav-link" th:href="@{/patients}"><i class="bi bi-people-fill me-1"></i> <span th:text="#{nav.patients}">Patients</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/patients/new}"><i class="bi bi-person-plus-fill me-1"></i> Register Patient</a>
+                    <a class="nav-link" th:href="@{/patients/new}"><i class="bi bi-person-plus-fill me-1"></i> <span th:text="#{nav.registerPatient}">Register Patient</span></a>
                 </li>
             </ul>
             <div class="d-flex align-items-center gap-2">
+                <!-- Language Switcher -->
+                <div class="btn-group btn-group-sm me-1" role="group" aria-label="Language Selector">
+                    <a href="?lang=en"
+                       class="btn btn-sm d-flex align-items-center gap-1"
+                       th:classappend="${#locale != null and #locale.language == 'de'} ? 'btn-outline-light' : 'btn-light text-primary fw-bold shadow-sm'"
+                       title="English">
+                        <span>🇬🇧</span> <span class="d-none d-md-inline">English</span><span class="d-md-none">EN</span>
+                    </a>
+                    <a href="?lang=de"
+                       class="btn btn-sm d-flex align-items-center gap-1"
+                       th:classappend="${#locale != null and #locale.language == 'de'} ? 'btn-light text-primary fw-bold shadow-sm' : 'btn-outline-light'"
+                       title="Deutsch">
+                        <span>🇩🇪</span> <span class="d-none d-md-inline">Deutsch</span><span class="d-md-none">DE</span>
+                    </a>
+                </div>
+
                 <a href="/h2-console" target="_blank" class="btn btn-outline-light btn-sm">
-                    <i class="bi bi-database me-1"></i> H2-Konsole
+                    <i class="bi bi-database me-1"></i> <span th:text="#{nav.h2Console}">H2-Konsole</span>
                 </a>
                 <a th:href="@{/patients/export/excel}" class="btn btn-light btn-sm d-flex align-items-center gap-1">
-                    <i class="bi bi-file-earmark-excel-fill text-success"></i> Export Clinic Excel
+                    <i class="bi bi-file-earmark-excel-fill text-success"></i> <span th:text="#{nav.exportExcel}">Export Clinic Excel</span>
                 </a>
             </div>
         </div>
@@ -145,7 +161,7 @@
 <!-- Footer Fragment -->
 <footer th:fragment="footer" class="footer mt-5 py-4 bg-white border-top text-center text-muted no-print">
     <div class="container">
-        <small>&copy; 2026 Klinikum Clinic Management System &bull; Electronic Health Records & Diagnostics</small>
+        <small th:text="#{app.footer}">&copy; 2026 Klinikum Clinic Management System &bull; Electronic Health Records & Diagnostics</small>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </footer>

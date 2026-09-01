@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Register New Patient')}"></head>
+<head th:replace="~{fragments/layout :: head(#{patient.form.createTitle})}"></head>
 <body>
 
 <div th:replace="~{fragments/layout :: navbar}"></div>
@@ -12,11 +12,11 @@
         <div class="col-lg-10">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h2 class="fw-bold text-dark mb-1">Register New Patient</h2>
-                    <p class="text-muted mb-0">Fill in patient demographics and initial clinical details.</p>
+                    <h2 class="fw-bold text-dark mb-1" th:text="#{patient.form.createTitle}">Register New Patient</h2>
+                    <p class="text-muted mb-0" th:text="#{patient.form.createSubtitle}">Fill in patient demographics and initial clinical details.</p>
                 </div>
                 <a th:href="@{/patients}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i> Back to Directory
+                    <i class="bi bi-arrow-left"></i> <span th:text="#{patient.form.backToDirectory}">Back to Directory</span>
                 </a>
             </div>
 
@@ -24,12 +24,12 @@
                 <form th:action="@{/patients}" th:object="${patient}" method="post">
                     <!-- Section 1: Basic Information -->
                     <h5 class="section-header border-bottom pb-2 mb-4 text-primary">
-                        <i class="bi bi-person-badge"></i> Personal & Demographic Information
+                        <i class="bi bi-person-badge"></i> <span th:text="#{patient.form.sec.personal}">Personal & Demographic Information</span>
                     </h5>
 
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">First Name <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold"><span th:text="#{patient.form.firstName}">First Name</span> <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" th:field="*{firstName}"
                                    th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''"
                                    placeholder="e.g. Eleanor">
@@ -37,7 +37,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Last Name <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold"><span th:text="#{patient.form.lastName}">Last Name</span> <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" th:field="*{lastName}"
                                    th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''"
                                    placeholder="e.g. Vance">
@@ -45,35 +45,35 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">Date of Birth <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold"><span th:text="#{patient.form.dob}">Date of Birth</span> <span class="text-danger">*</span></label>
                             <input type="date" class="form-control" th:field="*{dateOfBirth}"
                                    th:classappend="${#fields.hasErrors('dateOfBirth')} ? 'is-invalid' : ''">
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">Gender <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold"><span th:text="#{patient.form.gender}">Gender</span> <span class="text-danger">*</span></label>
                             <select class="form-select" th:field="*{gender}">
-                                <option th:each="g : ${genders}" th:value="${g}" th:text="${g.displayName}"></option>
+                                <option th:each="g : ${genders}" th:value="${g}" th:text="#{${'gender.' + g}}"></option>
                             </select>
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">Blood Group</label>
+                            <label class="form-label fw-bold" th:text="#{patient.form.bloodGroup}">Blood Group</label>
                             <select class="form-select" th:field="*{bloodGroup}">
-                                <option th:each="bg : ${bloodGroups}" th:value="${bg}" th:text="${bg.displayName}"></option>
+                                <option th:each="bg : ${bloodGroups}" th:value="${bg}" th:text="#{${'bloodgroup.' + bg}}"></option>
                             </select>
                         </div>
                     </div>
 
                     <!-- Section 2: Contact Information -->
                     <h5 class="section-header border-bottom pb-2 mb-4 text-primary">
-                        <i class="bi bi-telephone-inbound"></i> Contact Details & Address
+                        <i class="bi bi-telephone-inbound"></i> <span th:text="#{patient.form.sec.contact}">Contact Details & Address</span>
                     </h5>
 
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Phone Number <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold"><span th:text="#{patient.form.phone}">Phone Number</span> <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" th:field="*{phone}"
                                    th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
                                    placeholder="e.g. +1-555-0192">
@@ -81,7 +81,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Email Address</label>
+                            <label class="form-label fw-bold" th:text="#{patient.form.email}">Email Address</label>
                             <input type="email" class="form-control" th:field="*{email}"
                                    th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
                                    placeholder="e.g. patient@example.com">
@@ -89,7 +89,7 @@
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label fw-bold">Residential Address</label>
+                            <label class="form-label fw-bold" th:text="#{patient.form.address}">Residential Address</label>
                             <input type="text" class="form-control" th:field="*{address}"
                                    placeholder="e.g. 742 Evergreen Terrace, Springfield, OR">
                         </div>
@@ -97,18 +97,18 @@
 
                     <!-- Section 3: Emergency Contact -->
                     <h5 class="section-header border-bottom pb-2 mb-4 text-primary">
-                        <i class="bi bi-shield-plus"></i> Emergency Contact
+                        <i class="bi bi-shield-plus"></i> <span th:text="#{patient.form.sec.emergency}">Emergency Contact</span>
                     </h5>
 
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Emergency Contact Name</label>
+                            <label class="form-label fw-bold" th:text="#{patient.form.emergencyName}">Emergency Contact Name</label>
                             <input type="text" class="form-control" th:field="*{emergencyContactName}"
                                    placeholder="e.g. Hugh Vance (Spouse)">
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Emergency Contact Phone</label>
+                            <label class="form-label fw-bold" th:text="#{patient.form.emergencyPhone}">Emergency Contact Phone</label>
                             <input type="text" class="form-control" th:field="*{emergencyContactPhone}"
                                    placeholder="e.g. +1-555-0193">
                         </div>
@@ -116,19 +116,19 @@
 
                     <!-- Section 4: Medical History -->
                     <h5 class="section-header border-bottom pb-2 mb-4 text-primary">
-                        <i class="bi bi-file-earmark-medical"></i> General Medical History & Allergies
+                        <i class="bi bi-file-earmark-medical"></i> <span th:text="#{patient.form.sec.history}">General Medical History & Allergies</span>
                     </h5>
 
                     <div class="mb-4">
-                        <label class="form-label fw-bold">Background Notes, Past Surgeries, Known Allergies</label>
+                        <label class="form-label fw-bold" th:text="#{patient.form.historyNotes}">Background Notes, Past Surgeries, Known Allergies</label>
                         <textarea class="form-control" th:field="*{medicalHistoryNotes}" rows="3"
                                   placeholder="e.g. Penicillin allergy. History of mild asthma. Appendectomy in 2012."></textarea>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-                        <a th:href="@{/patients}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        <a th:href="@{/patients}" class="btn btn-outline-secondary px-4" th:text="#{common.cancel}">Cancel</a>
                         <button type="submit" class="btn btn-primary px-5 fw-bold">
-                            <i class="bi bi-check2-circle me-1"></i> Register Patient
+                            <i class="bi bi-check2-circle me-1"></i> <span th:text="#{patient.form.submitRegister}">Register Patient</span>
                         </button>
                     </div>
                 </form>

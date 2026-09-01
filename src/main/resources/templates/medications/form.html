@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head(${medication.id != null ? 'Edit Prescription' : 'Prescribe Medication'})}"></head>
+<head th:replace="~{fragments/layout :: head(${medication.id != null} ? #{medication.form.editTitle} : #{medication.form.createTitle})}"></head>
 <body>
 
 <div th:replace="~{fragments/layout :: navbar}"></div>
@@ -12,11 +12,11 @@
         <div class="col-lg-8">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h2 class="fw-bold text-dark mb-1" th:text="${medication.id != null ? 'Edit Prescription' : 'Prescribe Medication'}">Prescription</h2>
-                    <p class="text-muted mb-0">For patient: <strong th:text="${patient.fullName}">Patient Name</strong> (ID: #<span th:text="${patient.id}"></span>)</p>
+                    <h2 class="fw-bold text-dark mb-1" th:text="${medication.id != null} ? #{medication.form.editTitle} : #{medication.form.createTitle}">Prescription</h2>
+                    <p class="text-muted mb-0" th:text="#{medication.form.forPatient(${patient.fullName}, ${patient.id})}">For patient: Patient Name</p>
                 </div>
                 <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i> Back to Patient Record
+                    <i class="bi bi-arrow-left"></i> <span th:text="#{medication.form.back}">Back to Patient Record</span>
                 </a>
             </div>
 
@@ -26,7 +26,7 @@
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Medication Name <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold"><span th:text="#{medication.form.name}">Medication Name</span> <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" th:field="*{name}"
                                    th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
                                    placeholder="e.g. Metformin Hydrochloride, Lisinopril">
@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label fw-bold">Dosage <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold"><span th:text="#{medication.form.dosage}">Dosage</span> <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" th:field="*{dosage}"
                                    th:classappend="${#fields.hasErrors('dosage')} ? 'is-invalid' : ''"
                                    placeholder="e.g. 500 mg, 10 mg">
@@ -42,12 +42,12 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label fw-bold">Route</label>
+                            <label class="form-label fw-bold" th:text="#{medication.form.route}">Route</label>
                             <input type="text" class="form-control" th:field="*{route}" placeholder="e.g. Oral, Inhalation, Topical">
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Frequency <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold"><span th:text="#{medication.form.frequency}">Frequency</span> <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" th:field="*{frequency}"
                                    th:classappend="${#fields.hasErrors('frequency')} ? 'is-invalid' : ''"
                                    placeholder="e.g. Twice daily with meals">
@@ -55,44 +55,44 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label fw-bold">Start Date <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold"><span th:text="#{medication.form.startDate}">Start Date</span> <span class="text-danger">*</span></label>
                             <input type="date" class="form-control" th:field="*{startDate}"
                                    th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid' : ''">
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label fw-bold">End Date (Optional)</label>
+                            <label class="form-label fw-bold" th:text="#{medication.form.endDate}">End Date (Optional)</label>
                             <input type="date" class="form-control" th:field="*{endDate}">
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Status</label>
+                            <label class="form-label fw-bold" th:text="#{medication.form.status}">Status</label>
                             <select class="form-select" th:field="*{status}">
-                                <option th:each="st : ${statuses}" th:value="${st}" th:text="${st.displayName}"></option>
+                                <option th:each="st : ${statuses}" th:value="${st}" th:text="#{${'medication.status.' + st}}"></option>
                             </select>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Prescribing Physician</label>
+                            <label class="form-label fw-bold" th:text="#{medication.form.prescribedBy}">Prescribing Physician</label>
                             <input type="text" class="form-control" th:field="*{prescribedBy}" placeholder="e.g. Dr. Sarah Jenkins">
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label fw-bold">Patient Instructions</label>
+                            <label class="form-label fw-bold" th:text="#{medication.form.instructions}">Patient Instructions</label>
                             <textarea class="form-control" th:field="*{instructions}" rows="2" placeholder="e.g. Take with breakfast and dinner. Stay well hydrated."></textarea>
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label fw-bold">Clinical Notes / Rationale</label>
+                            <label class="form-label fw-bold" th:text="#{medication.form.notes}">Clinical Notes / Rationale</label>
                             <textarea class="form-control" th:field="*{notes}" rows="2" placeholder="Reason for prescription or monitoring instructions..."></textarea>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 pt-4 mt-4 border-top">
-                        <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-outline-secondary px-4" th:text="#{common.cancel}">Cancel</a>
                         <button type="submit" class="btn btn-success px-5 fw-bold">
-                            <i class="bi bi-check2-circle me-1"></i> Save Medication
+                            <i class="bi bi-check2-circle me-1"></i> <span th:text="#{medication.form.save}">Save Medication</span>
                         </button>
                     </div>
                 </form>

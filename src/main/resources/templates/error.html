@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Error')}"></head>
+<body class="bg-light d-flex align-items-center min-vh-100">
+<div class="container text-center py-5">
+    <div class="card shadow-sm border-0 p-5 mx-auto" style="max-width: 600px;">
+        <h1 class="display-4 text-danger fw-bold" th:text="${status} ?: 'Error'">Error</h1>
+        <h3 class="h5 text-secondary mb-3" th:text="${error} ?: 'An unexpected issue occurred'">Something went wrong</h3>
+        <p class="text-muted mb-4" th:text="${message} ?: 'The requested resource could not be found or processed.'">
+            Please check the URL or return to the main dashboard.
+        </p>
+        <div class="d-flex justify-content-center gap-2">
+            <a href="/" class="btn btn-primary px-4" th:text="#{nav.dashboard}">Back to Dashboard</a>
+            <a href="/patients" class="btn btn-outline-secondary px-4" th:text="#{nav.patients}">Patient Directory</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
